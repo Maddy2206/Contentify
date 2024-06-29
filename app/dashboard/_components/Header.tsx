@@ -16,7 +16,7 @@ function Header() {
         <h1 className='font-bold text-2xl'>Contentify</h1>
       </div>
      
-      <Link href={isSignedIn ? '/dashboard' : '/sign-in'}>
+      <Link href={isSignedIn ? '/dashboard' : '/'}>
         <Button className='flex gap-2 bg-gradient-to-r from-purple-400 to-pink-600 rounded-lg hover:scale-105 transition-transform duration-150'>
           Get started
        

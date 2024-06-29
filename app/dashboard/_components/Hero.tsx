@@ -42,7 +42,7 @@ function Hero() {
         </p>
   
         <div className="mb-6 flex flex-wrap justify-center gap-4">
-            <Link href={isSignedIn?'/dashboard':'/sign-in'}>
+            <Link href={isSignedIn?'/dashboard':'/'}>
             <Button
             className=" flex gap-2 bg-gradient-to-r from-purple-400 to-pink-600 rounded-lg hover:scale-105 transition-transform duration-150"
           >

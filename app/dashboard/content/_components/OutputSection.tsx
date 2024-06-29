@@ -20,27 +20,16 @@ function OutputSection({ output }: Props) {
 
   const copyToClipboard = () => {
     const editorInstance = editorRef.current.getInstance();
-  
-    if (editorInstance && typeof editorInstance.getContent === 'function') {
-      const html = editorInstance.getContent(); // Assuming getContent() retrieves HTML content
-      const tempElement = document.createElement('div');
-      tempElement.innerHTML = html;
-      const text = tempElement.textContent || tempElement.innerText || '';
-  
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          toast.success('Text copied to clipboard!');
-        })
-        .catch((err) => {
-          toast.error('Failed to copy text.');
-          console.error('Failed to copy text: ', err);
-        });
-    } else {
-      console.error('Editor instance or getContent() method not available.');
-    }
+    const markdown = editorInstance.getMarkdown();
+    navigator.clipboard.writeText(markdown)
+      .then(() => {
+        toast.success('Text copied to clipboard!');
+      })
+      .catch((err) => {
+        toast.error('Failed to copy text.');
+        console.error('Failed to copy text: ', err);
+      });
   };
-  
-  
 
   return (
     <div className='bg-white shadow-lg border rounded-lg'>
