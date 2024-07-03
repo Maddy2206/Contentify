@@ -1,10 +1,8 @@
 # Contentify
 
 
-<div style="display: flex; justify-content: center;">
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/3b01f449-2981-4967-b6e4-623544c83e0e" alt="Screenshot 2024-06-26 155035" style="margin-right: 10px;" width="400"/>
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/af1059c1-9a2e-47cb-b4b3-6dfbcd04af7e" alt="Image" style="margin-left: 10px;" width="400"/>
-</div>
+![image](https://github.com/Maddy2206/Contentify/assets/143317316/8961b180-c63d-4cdc-8e4e-4aacb462c883)
+
 
 ## Description
 Contentify is an advanced AI-powered content generation website dedicated to creating dynamic content across multiple domains. It excels in generating tailored content for blogs, articles, product descriptions, Instagram posts, code snippets, and debugging tasks.
@@ -12,13 +10,11 @@ Driven by integration with the Gemini API, Contentify leverages a versatile set 
 Equipped with a robust rich text editor, Contentify allows users to seamlessly edit and customize generated content according to their preferences. It also features convenient copy functionality and a history section to manage and reuse previously generated content, enhancing user productivity.
 Whether you're a blogger, marketer, developer, or content creator, Contentify simplifies the process of generating compelling content, empowering users to enhance their digital presence effectively.
 
-
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; justify-items: center;">
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/ae029c56-a990-4f3e-9da0-8b360bfbefba" alt="Screenshot 2024-06-26 151943" style="width: 100%; max-width: 400px;" />
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/703c96e8-28ac-4f8f-b796-c4333b14cfda" alt="Image" style="width: 100%; max-width: 400px;" />
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/99d86ebc-db8b-4aa9-90f0-159d078c2084" alt="Image" style="width: 100%; max-width: 400px;" />
-    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/f44da401-e393-4197-8f5a-df2399352dcc" alt="Image" style="width: 100%; max-width: 400px;" />
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/0af99ac7-c252-4a73-b526-ad6ab09fce50" alt="Screenshot 1" style="width: 45%; height: auto;">
+    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/ffc9c674-f3e3-4299-b0b5-22c115e8eda7" alt="Screenshot 2" style="width: 45%; height: auto;">
 </div>
+
 
 ## Demo and App Links
 - **Demo Link:** (https://youtu.be/0SeveHn8GkU)
@@ -32,9 +28,15 @@ Whether you're a blogger, marketer, developer, or content creator, Contentify si
 - **History Section:** Saves and manages users' previously generated responses for quick reference and reuse.
 - **User-Friendly Interface:** Intuitive design for seamless navigation and content management.
 
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/6c922a6e-0a10-4f59-b210-81493b00c914" alt="Screenshot 1" style="width: 47%; height: auto;">
+    <img src="https://github.com/Maddy2206/Contentify/assets/143317316/7709fe6c-0a52-4ed2-953f-175ea08d8ff0" alt="Screenshot 2" style="width: 47%; height: auto;">
+</div>
+
 
 ## Tech Stack Used
-- **Frontend:** Next.js, Tailwind CSS
+- **Frontend:** Next.js, Tailwind CSS, shadcn
+- **Authentication:** Clerk
 - **Backend:** PostgreSQL
 - **API Integration:** Gemini API
 - **Language:** TypeScript
