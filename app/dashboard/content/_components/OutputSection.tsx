@@ -1,54 +1,64 @@
-import React, { useEffect, useRef } from 'react';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
+"use client"
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
+
 interface Props {
   output: string;
 }
 
+function stripMarkdown(md: string): string {
+  return md
+    .replace(/```[\s\S]*?```/g, (match) => match.replace(/```\w*\n?/g, '').trim())
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/~~(.+?)~~/g, '$1')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[(.+?)\]\(.*?\)/g, '$1')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/^\s*>\s*/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 function OutputSection({ output }: Props) {
-  const editorRef: any = useRef();
+  const [value, setValue] = useState<string>(output);
 
   useEffect(() => {
-    const editorInstance = editorRef.current.getInstance();
-    editorInstance.setMarkdown(output);
+    setValue(output);
   }, [output]);
 
-  const copyToClipboard = () => {
-    const editorInstance = editorRef.current.getInstance();
-    const markdown = editorInstance.getMarkdown();
-    navigator.clipboard.writeText(markdown)
-      .then(() => {
-        toast.success('Text copied to clipboard!');
-      })
-      .catch((err) => {
-        toast.error('Failed to copy text.');
-        console.error('Failed to copy text: ', err);
-      });
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(stripMarkdown(value));
+      toast.success('Text copied to clipboard!');
+    } catch {
+      toast.error('Failed to copy text.');
+    }
   };
 
   return (
-    <div className='bg-white shadow-lg border rounded-lg'>
-      <div className='flex justify-end items-center p-2'>
-        <Button className='flex gap-2' onClick={copyToClipboard}>
-          <Copy className='w-4 h-4' /> 
-          Copy
+    <div className='bg-white shadow-lg border rounded-lg p-4' data-color-mode="light">
+      <div className="flex justify-end mb-2">
+        <Button variant="outline" size="sm" onClick={copyToClipboard}>
+          <Copy className="w-4 h-4 mr-1" /> Copy
         </Button>
       </div>
-      <Editor
-        ref={editorRef}
-        initialValue="Your result appears here"
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="wysiwyg"
-        useCommandShortcut={true}
-        onChange={() => console.log(editorRef.current.getInstance().getMarkdown())}
+      <MDEditor
+        value={value}
+        onChange={(v) => setValue(v ?? '')}
+        height={600}
+        preview="live"
       />
-      <ToastContainer />
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
   );
 }

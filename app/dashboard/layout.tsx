@@ -2,7 +2,6 @@
 
 import React from "react";
 import SideNav from "./_components/SideNav";
-
 import HeaderDashboard from "./_components/Header_dashboard";
 
 function Layout({
@@ -11,19 +10,18 @@ function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="fixed w-full h-full">
+    <div className="h-screen flex flex-col overflow-hidden">
       <HeaderDashboard />
-      <div className="flex h-full">
-        <div className="w-64 fixed h-full">
+      <div className="flex flex-1 overflow-hidden">
+        <aside className="w-64 shrink-0 overflow-y-auto">
           <SideNav />
-        </div>
-        <div className="ml-64 flex-1 overflow-auto relative">
+        </aside>
+        <main className="flex-1 overflow-y-auto">
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );
-  
 }
 
 export default Layout;

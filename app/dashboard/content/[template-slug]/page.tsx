@@ -7,12 +7,10 @@ import Templates from '@/app/(data)/Templates';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { chatSession } from '@/utils/AIModel';
 import { db } from '@/utils/db';
 import { AIOutput } from '@/utils/schema';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment'
-
 
 
 
@@ -25,7 +23,7 @@ interface PROPS {
 function CreateNewContent(props: PROPS) {
   const [loading, setLoading] = useState<boolean>(false);
   const [output, setOutput] = useState<string>('');
-  const {user}=useUser();
+  const { user } = useUser();
   const selectedTemplate: TEMPLATE | undefined = Templates?.find((item) => item?.slug === props.params['template-slug']);
 
   const GenerateAIContent = async (formData: any) => {
@@ -33,12 +31,19 @@ function CreateNewContent(props: PROPS) {
     try {
       const selectedPrompt = selectedTemplate?.aiPrompt;
       const FinalAIPrompt = JSON.stringify(formData) + ", " + selectedPrompt;
-  
-      const result = await chatSession.sendMessage(FinalAIPrompt);
-      const responseText = await result.response.text();
-      setOutput(responseText);
-  
-      await SaveInDb(formData, selectedTemplate?.slug, responseText);
+
+      const res = await fetch('/api/generate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: FinalAIPrompt }),
+      });
+
+      if (!res.ok) throw new Error('Generation failed');
+
+      const { content } = await res.json();
+      setOutput(content);
+
+      await SaveInDb(formData, selectedTemplate?.slug, content);
     } catch (error) {
       console.error("Error generating AI content:", error);
       setOutput("An error occurred while generating content.");
@@ -46,18 +51,15 @@ function CreateNewContent(props: PROPS) {
       setLoading(false);
     }
   };
-  
 
-
-  const SaveInDb=async(formData:any,slug:any,aiResp:string)=>{
-    const result=await db.insert(AIOutput).values({
-      formData:formData,
-      templateSlug:slug,
-      aiResponse:aiResp,
-      createdBy:user?.primaryEmailAddress?.emailAddress,
-      createdAt:moment().format('DD/MM/YYYY')
+  const SaveInDb = async (formData: any, slug: any, aiResp: string) => {
+    await db.insert(AIOutput).values({
+      formData: formData,
+      templateSlug: slug,
+      aiResponse: aiResp,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+      createdAt: moment().format('DD/MM/YYYY')
     }).execute();
-
   }
 
   return (
