@@ -1,31 +1,49 @@
 "use client"
 
-import React from 'react';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useAuth } from '@clerk/nextjs';
-import { UserButton } from '@clerk/nextjs';
-import { Menu } from 'lucide-react';
+import { UserButton } from "@clerk/nextjs"
+import { usePathname } from "next/navigation"
+import ThemeToggle from "@/app/_components/ThemeToggle"
 
-function HeaderDashboard({ onMenuClick }: { onMenuClick?: () => void }) {
-  const isSignedIn = useAuth();
-
-  return (
-    <div className='flex items-center justify-between py-2 sm:py-3 px-3 sm:px-5 border-b shadow-sm bg-white'>
-      <div className='flex items-center gap-2'>
-        {/* Mobile menu button */}
-        <button className="md:hidden mr-2" onClick={onMenuClick} aria-label="Open sidebar">
-          <Menu className="w-6 h-6" />
-        </button>
-        <Image src='https://cdn-icons-png.flaticon.com/128/8164/8164154.png' alt='logo' height={24} width={24} className="w-6 h-6 sm:w-8 sm:h-8" />
-        <h1 className='font-bold text-lg sm:text-xl'>Contentify</h1>
-      </div>
-      <div className="mt-2 sm:mt-0">
-        <UserButton />
-      </div>
-    </div>
-  );
+const TITLES: Record<string, { title: string; sub: string }> = {
+  "/dashboard":             { title: "Dashboard",   sub: "What are we turning into content today?" },
+  "/dashboard/repurpose":   { title: "Repurpose",   sub: "Turn one source into 5 platform-native posts" },
+  "/dashboard/history":     { title: "My Content",  sub: "All your generated and scheduled posts" },
+  "/dashboard/analytics":   { title: "Analytics",   sub: "Performance across all platforms" },
+  "/dashboard/connections": { title: "Connections", sub: "Manage your connected social accounts" },
 }
 
-export default HeaderDashboard;
+// Overlapping connected-account avatars (placeholder - design detail)
+const CONNECTED = [
+  { badge: "in", tint: "#0a66c2", name: "LinkedIn"  },
+  { badge: "bs", tint: "#0285ff", name: "Bluesky"   },
+  { badge: "M",  tint: "#6364ff", name: "Mastodon"  },
+]
+
+export default function DashboardHeader() {
+  const pathname = usePathname()
+  const { title, sub } = TITLES[pathname] ?? { title: "Dashboard", sub: "" }
+
+  return (
+    <header style={{ height: 60, flexShrink: 0, borderBottom: "1px solid hsl(var(--border))", background: "color-mix(in srgb, hsl(var(--background)) 85%, transparent)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 clamp(16px,2.5vw,28px)", position: "sticky", top: 0, zIndex: 20 }}>
+      {/* Title */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+        <h1 style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-.01em", margin: 0, whiteSpace: "nowrap" }}>{title}</h1>
+        <span style={{ fontSize: 13, color: "hsl(var(--muted-foreground))", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{sub}</span>
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <ThemeToggle />
+        {/* Connected account avatar stack */}
+        <div style={{ display: "flex", alignItems: "center", marginRight: 4 }}>
+          {CONNECTED.map((a, i) => (
+            <div key={a.name} title={a.name} style={{ width: 30, height: 30, borderRadius: 99, background: a.tint, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, fontFamily: "var(--font-geist-mono, monospace)", border: "2px solid hsl(var(--background))", marginLeft: i === 0 ? 0 : -8 }}>
+              {a.badge}
+            </div>
+          ))}
+        </div>
+        <UserButton afterSignOutUrl="/" />
+      </div>
+    </header>
+  )
+}

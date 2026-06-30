@@ -1,29 +1,43 @@
 "use client"
 
-import { Button } from '@/components/ui/button';
-import React from 'react';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Button } from '@/components/ui/button'
+import { Check, Copy } from 'lucide-react'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-function CopyButton({ aiResponse }: any) {
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(aiResponse)
+function CopyButton({ aiResponse }: { aiResponse: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(aiResponse)
       .then(() => {
-        toast.success('Text copied to clipboard!');
+        setCopied(true)
+        toast.success('Copied to clipboard!')
+        setTimeout(() => setCopied(false), 2000)
       })
-      .catch((err) => {
-        toast.error('Failed to copy text.');
-        console.error('Failed to copy text: ', err);
-      });
-  };
+      .catch(() => toast.error('Failed to copy.'))
+  }
 
   return (
-    <div>
-      <Button variant='ghost' className='text-primary' onClick={copyToClipboard}>
-        Copy
-      </Button>
-    </div>
-  );
+    <Button
+      variant='ghost'
+      size='sm'
+      onClick={handleCopy}
+      className={`gap-1.5 text-xs font-medium transition-colors ${
+        copied
+          ? 'text-green-600 hover:text-green-600'
+          : 'text-purple-600 hover:text-purple-700 hover:bg-purple-50'
+      }`}
+    >
+      {copied ? (
+        <><Check className='w-3.5 h-3.5' /> Copied</>
+      ) : (
+        <><Copy className='w-3.5 h-3.5' /> Copy</>
+      )}
+    </Button>
+  )
 }
 
-export default CopyButton;
+export default CopyButton

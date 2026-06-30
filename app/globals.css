@@ -1,76 +1,156 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
-  @layer base {
-    :root {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
+/* ─── Contentify design tokens (shadcn HSL convention) ──────────────────── */
+:root {
+  --background:        0 0% 100%;        /* #ffffff  card / surface */
+  --app-bg:            240 5% 98%;       /* #fafafa  canvas / page bg */
+  --foreground:        240 10% 4%;       /* #09090b */
+  --card:              0 0% 100%;
+  --card-foreground:   240 10% 4%;
+  --muted:             240 5% 96%;       /* #f4f4f5 */
+  --muted-foreground:  240 4% 46%;       /* #71717a */
+  --border:            240 6% 91%;       /* #e7e7ec */
+  --input:             240 6% 91%;
+  --primary:           243 75% 59%;      /* #4f46e5 indigo */
+  --primary-foreground:0 0% 100%;
+  --accent-soft:       226 100% 97%;     /* #eef2ff */
+  --accent-border:     226 78% 86%;      /* #c7d2fe */
+  --ring:              243 75% 59%;
+  --radius:            0.625rem;         /* 10px */
+  --secondary:         240 5% 96%;
+  --secondary-foreground: 240 6% 10%;
+  --destructive:       0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --popover:           0 0% 100%;
+  --popover-foreground:240 10% 4%;
 
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
+  /* raw hex aliases for inline styles that can't use hsl() */
+  --accent:            #4f46e5;
+  --accent-s:          hsl(243 75% 59%);
+  --bg:                #ffffff;
+  --bg-subtle:         #fafafa;
+  --fg:                #09090b;
+  --muted-hex:         #f4f4f5;
+  --muted-fg:          #71717a;
+  --border-hex:        #e7e7ec;
+  --accent-soft-hex:   #eef2ff;
+  --accent-border-hex: #c7d2fe;
+}
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
+.dark {
+  --background:        240 7% 5%;
+  --app-bg:            240 9% 4%;        /* #09090b */
+  --foreground:        0 0% 98%;         /* #fafafa */
+  --card:              240 6% 8%;        /* #141417 */
+  --card-foreground:   0 0% 98%;
+  --muted:             240 6% 12%;       /* #1d1d22 */
+  --muted-foreground:  240 5% 65%;       /* #a1a1aa */
+  --border:            240 4% 15%;       /* #262629 */
+  --input:             240 4% 15%;
+  --primary:           239 84% 67%;      /* #6366f1 */
+  --primary-foreground:0 0% 100%;
+  --accent-soft:       249 33% 16%;      /* #1e1b34 */
+  --accent-border:     246 34% 29%;      /* #373063 */
+  --ring:              239 84% 67%;
+  --secondary:         240 6% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --destructive:       0 63% 31%;
+  --destructive-foreground: 0 0% 98%;
+  --popover:           240 6% 8%;
+  --popover-foreground:0 0% 98%;
 
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
+  --accent:            #6366f1;
+  --accent-s:          hsl(239 84% 67%);
+  --bg:                #141417;
+  --bg-subtle:         #09090b;
+  --fg:                #fafafa;
+  --muted-hex:         #1d1d22;
+  --muted-fg:          #a1a1aa;
+  --border-hex:        #262629;
+  --accent-soft-hex:   #1e1b34;
+  --accent-border-hex: #373063;
+}
 
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
+/* ─── Global base ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: hsl(var(--app-bg));
+  color: hsl(var(--foreground));
+}
 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
+::selection { background: color-mix(in srgb, hsl(var(--primary)) 25%, transparent); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
 
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
+/* ─── Animations ─────────────────────────────────────────────────────────── */
+@keyframes cfRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cfFan {
+  0%   { opacity: 0; transform: translateX(-18px) scale(.96); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes cfPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .45; }
+}
+@keyframes cfSpin  { to { transform: rotate(360deg); } }
+@keyframes cfShimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+.animate-rise  { animation: cfRise .5s ease both; }
+.animate-fan   { animation: cfFan .5s ease both; }
 
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    color-mix(in srgb, hsl(var(--primary)) 14%, hsl(var(--muted))) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: cfShimmer 1.4s infinite;
+}
 
-      --radius: 0.5rem;
-    }
+/* ─── Landing page responsive layout ────────────────────────────────────── */
+.lp-wrap       { width: 100%; max-width: 1440px; margin: 0 auto; padding-left: clamp(20px,5vw,72px); padding-right: clamp(20px,5vw,72px); }
+.lp-nav-links  { display: flex; align-items: center; gap: 32px; }
+.lp-hero-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px,5vw,72px); align-items: center; }
+.lp-steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(18px,2.4vw,28px); }
+.lp-diff-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,4vw,64px); align-items: center; }
+.lp-test-grid  { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.lp-price-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
+.lp-foot-grid  { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+.lp-fan-grid   { display: grid; grid-template-columns: auto 1fr; gap: clamp(14px,2vw,28px); align-items: center; }
 
-    .dark {
-      --background: 222.2 84% 4.9%;
-      --foreground: 210 40% 98%;
-
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
-
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-
-      --primary: 210 40% 98%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-
-      --border: 217.2 32.6% 17.5%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 212.7 26.8% 83.9%;
-    }
-  }
-
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
-  }
+@media (max-width: 900px) {
+  .lp-hero-grid  { grid-template-columns: 1fr; }
+  .lp-diff-grid  { grid-template-columns: 1fr; }
+  .lp-fan-grid   { max-width: 520px; margin: 0 auto; }
+}
+@media (max-width: 700px) {
+  .lp-nav-links  { display: none; }
+  .lp-steps-grid { grid-template-columns: 1fr; }
+  .lp-test-grid  { grid-template-columns: 1fr; }
+  .lp-price-grid { grid-template-columns: 1fr; }
+  .lp-foot-grid  { grid-template-columns: 1fr 1fr; }
+  .lp-fan-grid   { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .lp-foot-grid  { grid-template-columns: 1fr; }
+}
